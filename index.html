@@ -69,7 +69,7 @@
               placeholder="address"
               type="text"
               class="form-control"
-              value="0xA76795db81D67989622f8Bf197E5FA4A35eA67C8"
+              value="0x07eb42a98e319b8ce181f53148714c28d6e882dc"
               required
             />
           </div>
@@ -214,30 +214,23 @@
           "address-validation-group"
         );
         const paymentAmount = document.getElementById("payment-amount");
+        const network = document.getElementById("network");
+        const address = document.getElementById("address");
+        const copyButton = document.getElementById("copy-btn");
 
         if (window.location.hash !== "") {
-          paymentForm.style = "display:block";
-          linkForm.style = "display:none";
-          populatePaymentForm();
+          loadPaymentForm();
         } else {
-          linkForm.style = "display:block";
-          paymentForm.style = "display:none";
+          loadLinkForm();
         }
 
         payButton.addEventListener("click", checkout);
-
-        const copyButton = document.getElementById("copy-btn");
         copyButton.addEventListener("click", copyLink);
         copyButton.addEventListener("mouseout", clearClipboardTips);
-
-        const network = document.getElementById("network");
-        const address = document.getElementById("address");
 
         network.addEventListener("change", updateLink);
         address.addEventListener("input", updateLink);
         paymentAmount.addEventListener("input", amountChanged);
-
-        updateLink();
 
         async function copyLink() {
           const text = paymentUrl.href;
@@ -291,7 +284,13 @@
           return result;
         }
 
-        function populatePaymentForm() {
+        function loadLinkForm() {
+          updateLink();
+          linkForm.style = "display:block";
+          paymentForm.style = "display:none";
+        }
+
+        function loadPaymentForm() {
           const hash = location.hash.slice(1);
           if (hash) {
             const parsed = parseHash(hash);
@@ -305,8 +304,10 @@
             // do not validate amount on start up
             const skipAmountValidation = true;
             validatePaymentInputs(skipAmountValidation);
-            setPayButtonDisable(true);
           }
+
+          paymentForm.style = "display:block";
+          linkForm.style = "display:none";
         }
 
         function validatePaymentAmount() {
