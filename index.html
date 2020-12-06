@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>zksync payment</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+      crossorigin="anonymous"
+    />
+    <style>
+      .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        color: #818a91;
+        text-align: center;
+        border-top: 1px solid #818a91;
+      }
+      .error-feedback {
+        color: red;
+        font-size: 70%;
+        min-height: 12px;
+      }
+      .btn-clipboard {
+        display: inline-block;
+        padding: 0.25rem 0.25rem;
+        font-size: 75%;
+        cursor: pointer;
+        border-radius: 0.25rem;
+        border: 0;
+      }
+      .btn-clipboard:hover {
+        color: white;
+        background-color: #027de0;
+      }
+      .clipboard-group {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        z-index: 10;
+        display: block;
+        color: #818a91;
+        background-color: transparent;
+      }
+      .clipboard-tips {
+        display: inline-block;
+        font-size: 75%;
+      }
+    </style>
+  </head>
+  <body>
+    <!--ZkSync Payment Link Builder Form-->
+    <div id="link-form" style="display: none">
+      <div class="mt-3 container-fluid" style="max-width: 600px">
+        <p style="text-align: center">Zksync Payment Link Builder</p>
+
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Address</span>
+            </div>
+
+            <input
+              id="address"
+              placeholder="address"
+              type="text"
+              class="form-control"
+              value="0xA76795db81D67989622f8Bf197E5FA4A35eA67C8"
+              required
+            />
+          </div>
+          <div id="address-error" class="error-feedback"></div>
+        </div>
+
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="network">Network</label>
+          </div>
+          <select class="custom-select" id="network">
+            <option selected value="mainnet">mainnet</option>
+            <option value="ropsten">ropsten</option>
+            <option value="rinkeby">rinkeby</option>
+          </select>
+        </div>
+
+        <div id="link-card" class="card bg-light mt-4">
+          <div class="card-body">
+            <div class="px-2"><a id="payment-url" target="_blank"></a></div>
+            <div class="clipboard-group">
+              <div id="clipboard-tips" class="clipboard-tips"></div>
+              <button
+                class="btn-clipboard"
+                id="copy-btn"
+                data-original-title="copy to clipboard"
+                type="button"
+              >
+                Copy
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Payment Form-->
+    <div id="payment-form" style="display: none">
+      <div class="mt-3 container-fluid" style="max-width: 600px">
+        <p style="text-align: center">Make a zksync payment</p>
+        <div class="mb-3">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Recipient</span>
+            </div>
+            <input id="payment-to" class="form-control" readonly />
+          </div>
+          <div id="payment-address-error" class="error-feedback"></div>
+        </div>
+        <div class="mb-3">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Network</span>
+            </div>
+            <input id="payment-network" class="form-control" readonly />
+          </div>
+          <div id="payment-network-error" class="error-feedback"></div>
+        </div>
+        <div>
+          <div class="mb-3 input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Amount</span>
+            </div>
+            <input
+              id="payment-amount"
+              placeholder="amount"
+              class="form-control"
+              required
+            />
+            <div class="input-group-append">
+              <select class="custom-select" id="token">
+                <option selected value="ETH">ETH</option>
+                <option value="DAI">DAI</option>
+              </select>
+            </div>
+          </div>
+          <div id="amount-error" class="error-feedback"></div>
+        </div>
+
+        <button
+          id="pay-btn"
+          type="button"
+          class="btn btn-primary btn-block"
+          style="margin-top: 30px"
+          disabled
+        >
+          Pay
+        </button>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>
+        source @
+        <a
+          href="https://github.com/yuetloo/zksync-payment-link"
+          target="_blank"
+        >
+          <svg
+            height="20"
+            class="github-logo"
+            viewBox="0 0 16 16"
+            version="1.1"
+            width="20"
+            aria-hidden="true"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"
+            ></path>
+          </svg>
+        </a>
+      </p>
+    </div>
+
+    <script
+      type="text/javascript"
+      integrity="sha384-ljKi1eeE5Wpay5gyls2IG/jsGj8PpPTrcIxJibKSOSo2zJk47wsI7ltJ17bSctfF"
+      crossorigin="anonymous"
+      src="https://cdn-cors.ethers.io/lib/ethers-5.0.23.umd.min.js"
+    ></script>
+
+    <script
+      type="text/javascript"
+      integrity="sha384-tzD61r44UGQnUxPiPc+2BGsLy3O+qfD8Mh1MhoPGde3QZSm4GEs84tCw8MD4UYkW"
+      crossorigin="anonymous"
+      src="https://unpkg.com/zksync-checkout@0.0.7/dist/main.js"
+    ></script>
+
+    <script>
+      const networkSet = new Set(["mainnet", "ropsten", "rinkeby"]);
+      document.onload = load();
+
+      function load(e) {
+        const paymentForm = document.getElementById("payment-form");
+        const linkForm = document.getElementById("link-form");
+        const paymentUrl = document.getElementById("payment-url");
+        const linkCard = document.getElementById("link-card");
+        const clipboardTips = document.getElementById("clipboard-tips");
+        const payButton = document.getElementById("pay-btn");
+        const addressValidationGroup = document.getElementById(
+          "address-validation-group"
+        );
+        const paymentAmount = document.getElementById("payment-amount");
+
+        if (window.location.hash !== "") {
+          paymentForm.style = "display:block";
+          linkForm.style = "display:none";
+          populatePaymentForm();
+        } else {
+          linkForm.style = "display:block";
+          paymentForm.style = "display:none";
+        }
+
+        payButton.addEventListener("click", checkout);
+
+        const copyButton = document.getElementById("copy-btn");
+        copyButton.addEventListener("click", copyLink);
+        copyButton.addEventListener("mouseout", clearClipboardTips);
+
+        const network = document.getElementById("network");
+        const address = document.getElementById("address");
+
+        network.addEventListener("change", updateLink);
+        address.addEventListener("input", updateLink);
+        paymentAmount.addEventListener("input", amountChanged);
+
+        updateLink();
+
+        async function copyLink() {
+          const text = paymentUrl.href;
+          navigator.clipboard.writeText(text).then(() => {
+            clipboardTips.textContent = "copied!";
+          });
+        }
+
+        function clearClipboardTips() {
+          clipboardTips.textContent = "";
+        }
+
+        function validateAddress(toAddress) {
+          const addressError = document.getElementById("address-error");
+          let validAddress = null;
+          try {
+            validAddress = ethers.utils.getAddress(toAddress);
+            addressError.textContent = "";
+            linkCard.style = "display:block";
+          } catch (e) {
+            addressError.textContent = "invalid address";
+            linkCard.style = "display:none";
+          }
+
+          return validAddress;
+        }
+
+        function updateLink(e) {
+          const toAddress = validateAddress(address.value);
+          if (toAddress) {
+            const url = `${location.origin}${location.pathname}#network=${network.value}&to=${toAddress}`;
+            paymentUrl.textContent = url;
+            paymentUrl.href = url;
+          }
+        }
+
+        function parseHash(data) {
+          const pairs = data.split("&");
+
+          const result = pairs.reduce((parsed, item) => {
+            const keyValue = item.split("=");
+
+            if (keyValue.length > 1) {
+              parsed[keyValue[0]] = keyValue[1];
+            }
+
+            return parsed;
+          }, {});
+
+          console.log("arguments", result);
+          return result;
+        }
+
+        function populatePaymentForm() {
+          const hash = location.hash.slice(1);
+          if (hash) {
+            const parsed = parseHash(hash);
+
+            const paymentTo = document.getElementById("payment-to");
+            const paymentNetwork = document.getElementById("payment-network");
+
+            paymentTo.value = parsed.to || "";
+            paymentNetwork.value = (parsed.network || "").toLowerCase();
+
+            // do not validate amount on start up
+            const skipAmountValidation = true;
+            validatePaymentInputs(skipAmountValidation);
+            setPayButtonDisable(true);
+          }
+        }
+
+        function validatePaymentAmount() {
+          const amountError = document.getElementById("amount-error");
+          const token = document.getElementById("token").value;
+          let amount = document.getElementById("payment-amount").value;
+          let amountIsValid = false;
+          let errorMessage = null;
+
+          if (token === "ETH") {
+            try {
+              // convert to wei
+              amount = ethers.utils.parseEther(amount);
+
+              if (amount.gt(0)) {
+                amount = amount.toString();
+                amountIsValid = true;
+              }
+            } catch (e) {
+              errorMessage = e;
+            }
+          } else {
+            try {
+              // if we can convert the string to bignumber, its valid
+              const amountInBigNumber = ethers.bigNumber.from(amount);
+              if (amountInBigNumber.gt(0)) {
+                amountIsValid = true;
+              }
+            } catch (e) {
+              errorMessage = e;
+            }
+          }
+
+          if (amountIsValid) {
+            amountError.textContent = "";
+            return { amount, token };
+          } else {
+            amountError.textContent = errorMessage ?? "Invalid amount";
+            return null;
+          }
+        }
+
+        function amountChanged() {
+          const valid = validatePaymentAmount();
+          const disable = valid === null;
+          setPayButtonDisable(disable);
+        }
+
+        function setErrorMessage(el, errorMessage) {
+          el.innerHTML = `${errorMessage}. Click <a href="${location.origin}${location.pathname}">here</a> to return to link builder page`;
+        }
+
+        function validatePaymentInputs(skipAmountValidation = false) {
+          const addressError = document.getElementById("payment-address-error");
+          const networkError = document.getElementById("payment-network-error");
+          const payTo = document.getElementById("payment-to");
+          const networkElement = document.getElementById("payment-network");
+          const network = networkElement.value;
+          let to = null;
+          let valid = true;
+          let amount = null;
+          let token = null;
+
+          try {
+            to = ethers.utils.getAddress(payTo.value);
+            addressError.textContent = "";
+          } catch (e) {
+            valid = false;
+            setErrorMessage(addressError, "Invalid address");
+          }
+
+          if (networkSet.has(network)) {
+            networkError.textContent = "";
+          } else {
+            valid = false;
+            setErrorMessage(networkError, "Invalid network");
+          }
+
+          if (skipAmountValidation === false) {
+            const validAmount = validatePaymentAmount();
+            if (validAmount) {
+              amount = validAmount.amount;
+              token = validAmount.token;
+            } else {
+              valid = false;
+            }
+          }
+
+          const disable = !valid;
+          setPayButtonDisable(disable);
+
+          if (!valid) {
+            return null;
+          } else {
+            return { network, to, valid, amount, token };
+          }
+        }
+
+        function setPayButtonDisable(value) {
+          payButton.disabled = value;
+        }
+
+        async function checkout() {
+          const validInputs = validatePaymentInputs();
+          if (!validInputs) {
+            return;
+          }
+          const { network, to, token, amount } = validInputs;
+          const manager = new ZkSyncCheckout.CheckoutManager(network);
+
+          const transaction = {
+            to,
+            token,
+            amount,
+          };
+
+          console.log("transaction", transaction);
+          try {
+            const hashes = await manager.zkSyncBatchCheckout(
+              [transaction],
+              token
+            );
+            console.log("hashes", hashes);
+
+            // Wait until the transactions are commited.
+            const receipts = await manager.wait(hashes, "COMMIT");
+            console.log("receipts", receipts);
+          } catch (e) {}
+        }
+      }
+    </script>
+  </body>
+</html>
