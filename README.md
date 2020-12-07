@@ -25,7 +25,7 @@ If the url hash tag is missing network or address information, users will be red
 This app has been deployed on github pages and IPFS.
 To access the app from github pages: click the following link
 
-[https://yuetloo.github.io/zksync-payment-link/](https://yuetloo.github.io/zksync-payment-link/)
+[https://yuetloo.github.io/zkpayment/](https://yuetloo.github.io/zkpayment/)
 
 To access from IPFS, use the following [https://0xgb3b2jvcrtfjdufyrhvwsfon45ejjowcrqunycrvcjrql63dartmk.meeseeks.app](https://0xgb3b2jvcrtfjdufyrhvwsfon45ejjowcrqunycrvcjrql63dartmk.meeseeks.app)
 
