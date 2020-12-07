@@ -32,7 +32,7 @@ To access from IPFS, use the following [https://0xgb3b2jvcrtfjdufyrhvwsfon45ejjo
 Another option from IPFS is to go to [meeseeks.app](https://meeseeks.app/) and enter the hash `QmeEnVJ4py3fnJmtUNZt746UsghrBd7PZfkvJTEEDriAjB`.
 
 Here's a youtube demo showing how generate the payment, setup github donation with the link and make a donation using that link.
-[https://img.youtube.com/vi/UwkXT4tG6OE/maxresdefault.jpg](https://youtu.be/UwkXT4tG6OE)
+[![watch zksync payment setup video](https://img.youtube.com/vi/UwkXT4tG6OE/0.jpg)](https://www.youtube.com/watch?v=UwkXT4tG6OE)
 
 # How to deploy to IPFS
 
