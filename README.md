@@ -27,9 +27,9 @@ To access the app from github pages: click the following link
 
 [https://yuetloo.github.io/zkpayment/](https://yuetloo.github.io/zkpayment/)
 
-To access from IPFS, use the following [https://0xgb3b2jvcrtfjdufyrhvwsfon45ejjowcrqunycrvcjrql63dartmk.meeseeks.app](https://0xgb3b2jvcrtfjdufyrhvwsfon45ejjowcrqunycrvcjrql63dartmk.meeseeks.app)
+To access from IPFS, use the following [https://0xgl766ci4gkm4ogwsqn64qg2tiomz6wc6vpsfp5l7zdjtrzi7dbdl.meeseeks.app](https://0xgl766ci4gkm4ogwsqn64qg2tiomz6wc6vpsfp5l7zdjtrzi7dbdl.meeseeks.app)
 
-Another option from IPFS is to go to [meeseeks.app](https://meeseeks.app/) and enter the hash `QmeEnVJ4py3fnJmtUNZt746UsghrBd7PZfkvJTEEDriAjB`.
+Another option from IPFS is to go to [meeseeks.app](https://meeseeks.app/) and enter the hash `QmRa1LkShQmZG7SrssaUsQPCkNVWtuSrFVdAxE8ChW4mCv`.
 
 Here's a youtube demo showing how generate the payment, setup github donation with the link and make a donation using that link.
 [![watch zksync payment setup video](https://img.youtube.com/vi/UwkXT4tG6OE/0.jpg)](https://www.youtube.com/watch?v=UwkXT4tG6OE)
