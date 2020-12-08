@@ -201,6 +201,8 @@
 
     <script>
       const networkSet = new Set(["mainnet", "ropsten", "rinkeby"]);
+      const tokenUnits = { ETH: 18, DAI: 18 };
+
       document.onload = load();
 
       function load(e) {
@@ -315,28 +317,16 @@
           let amountIsValid = false;
           let errorMessage = null;
 
-          if (token === "ETH") {
-            try {
-              // convert to wei
-              amount = ethers.utils.parseEther(amount);
+          const unit = tokenUnits[token];
+          if (unit) {
+            amount = ethers.utils.parseUnits(amount, unit);
 
-              if (amount.gt(0)) {
-                amount = amount.toString();
-                amountIsValid = true;
-              }
-            } catch (e) {
-              errorMessage = e;
+            if (amount.gt(0)) {
+              amount = amount.toString();
+              amountIsValid = true;
             }
           } else {
-            try {
-              // if we can convert the string to bignumber, its valid
-              const amountInBigNumber = ethers.BigNumber.from(amount);
-              if (amountInBigNumber.gt(0)) {
-                amountIsValid = true;
-              }
-            } catch (e) {
-              errorMessage = e;
-            }
+            errorMessage = "Unsupported token";
           }
 
           if (amountIsValid) {
