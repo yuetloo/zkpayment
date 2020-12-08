@@ -1,6 +1,6 @@
 # Zksync Payment Link
 
-This is an MVP project created for the [Gitcoin zksync payment link](https://gitcoin.co/issue/matter-labs/zksync/258/100024169)
+This is an MVP project created for the [Gitcoin zksync payment link bounty](https://gitcoin.co/issue/matter-labs/zksync/258/100024169).
 
 The zksync payment link app is a single static html file with the intention to keep it simple so that it can be uploaded to IPFS using the [meeseeks-app](https://github.com/ricmoo/meeseeks-app).
 
@@ -19,6 +19,8 @@ Users can click on the generated link to go directly to the payment page or copy
 This form is presented if the url contains a hash tag with network and address information. Clicking the pay button on this page with the amount information filled out will bring up the zksync payment page.
 
 If the url hash tag is missing network or address information, users will be redirected back to the link builder page.
+
+The payment form integrates with zksync checkout library as per the documentation [here](https://www.notion.so/zkSync-Checkout-docs-2bffd6f169e746d0b51873e4127992a6).
 
 # Demo
 
