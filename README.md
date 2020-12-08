@@ -46,9 +46,9 @@ meeseeks-cli publish index.html
 Result:
 
 ```
-Publishing: index.html (14350 bytes)
-  Hash: QmeEnVJ4py3fnJmtUNZt746UsghrBd7PZfkvJTEEDriAjB
-  URL:  https://0xgb3b2jvcrtfjdufyrhvwsfon45ejjowcrqunycrvcjrql63dartmk.meeseeks.app
+Publishing: index.html (14021 bytes)
+  Hash: QmRa1LkShQmZG7SrssaUsQPCkNVWtuSrFVdAxE8ChW4mCv
+  URL:  https://0xgl766ci4gkm4ogwsqn64qg2tiomz6wc6vpsfp5l7zdjtrzi7dbdl.meeseeks.app
 ```
 
 # TO-DO
