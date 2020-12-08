@@ -330,7 +330,7 @@
           } else {
             try {
               // if we can convert the string to bignumber, its valid
-              const amountInBigNumber = ethers.bigNumber.from(amount);
+              const amountInBigNumber = ethers.BigNumber.from(amount);
               if (amountInBigNumber.gt(0)) {
                 amountIsValid = true;
               }
